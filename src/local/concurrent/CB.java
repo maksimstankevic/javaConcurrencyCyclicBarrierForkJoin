@@ -63,7 +63,8 @@ class CB {
             NumberFormat formatter = new DecimalFormat("0.######E0", DecimalFormatSymbols.getInstance(Locale.ROOT));
             String exp = formatter.format(totalFactorial);
 
-            System.out.println(thisThreadName + ": Final result = " + exp + " --- " + totalFactorial);
+            System.out.println(thisThreadName + ": Final result = " + exp);
+//            System.out.println(thisThreadName + ": Final result = " + exp + " --- " + totalFactorial);
             double time = (System.currentTimeMillis() - startTime)/1000.0;
             System.out.println("Completed in: " + time + " sec.");
 
@@ -120,14 +121,28 @@ class CB {
 
 
     public static void main(String[] args) throws InterruptedException{
-        CB demo = new CB();
+        CB demo1 = new CB();
+        CB demo2 = new CB();
+        CB demo3 = new CB();
+        CB demo4 = new CB();
+        CB demo5 = new CB();
 
-        for (int i = 0; i < 1; i++){
-            demo.runSimulation(1, 222);
-            demo.runSimulation(2, 222);
-            demo.runSimulation(3, 222);
-            demo.runSimulation(4, 222);
-        }
+        demo1.runSimulation(1, 15000);
+        demo1 = null;
+        System.gc();
+        demo2.runSimulation(1, 15000);
+        demo2 = null;
+        System.gc();
+        demo3.runSimulation(2, 15000);
+        demo3 = null;
+        System.gc();
+        demo4.runSimulation(3, 15000);
+        demo4 = null;
+        System.gc();
+        demo5.runSimulation(4, 15000);
+        demo5 = null;
+        System.gc();
+
 
 
 
