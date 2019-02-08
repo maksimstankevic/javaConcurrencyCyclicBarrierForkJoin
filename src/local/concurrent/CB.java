@@ -1,11 +1,14 @@
 package local.concurrent;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.*;
-
+import java.util.stream.Collectors;
 
 
 class CB {
@@ -69,6 +72,44 @@ class CB {
             System.out.println("Completed in: " + time + " sec.");
 
         }
+    }
+
+    class ForkJoinEncode extends RecursiveAction {
+
+        private int start;
+        private int end;
+        private List<Path> files;
+
+        protected void compute() {
+
+        }
+
+
+    }
+
+    class ForkJoinDecode extends RecursiveAction{
+
+
+        protected void compute() {
+
+        }
+
+    }
+
+    private void processFile (Path fileIN, Path fileOUT) {
+
+    }
+
+    private void encrypDecryptWithForkJoin (int parallelism, Path data, Path dataOut){
+
+        try {
+            List<Path> files = Files.walk(data, 1)
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (IOException e) {
+
+        }
+
+
     }
 
     private void runSimulation(int numWorkers, int factorialNum) throws InterruptedException {

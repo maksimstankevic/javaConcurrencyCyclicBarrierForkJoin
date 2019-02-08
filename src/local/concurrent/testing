@@ -24,3 +24,30 @@ pool-5-thread-3 waiting for others to reach barrier.
 pool-5-thread-4 waiting for others to reach barrier.
 pool-5-thread-4: Final result = 2.746599E56129
 Completed in: 0.061 sec.
+
+Spawning 1 worker threads to compute 15000 numbers partialFactorial out of total: 15000
+pool-1-thread-1 waiting for others to reach barrier.
+pool-1-thread-1: Final result = 2.746599E56129
+Completed in: 0.299 sec.
+Spawning 1 worker threads to compute 15000 numbers partialFactorial out of total: 15000
+pool-2-thread-1 waiting for others to reach barrier.
+pool-2-thread-1: Final result = 2.746599E56129
+Completed in: 0.227 sec.
+Spawning 2 worker threads to compute 7500 numbers partialFactorial out of total: 15000
+pool-3-thread-1 waiting for others to reach barrier.
+pool-3-thread-2 waiting for others to reach barrier.
+pool-3-thread-2: Final result = 2.746599E56129
+Completed in: 0.104 sec.
+Spawning 3 worker threads to compute 5000 numbers partialFactorial out of total: 15000
+pool-4-thread-1 waiting for others to reach barrier.
+pool-4-thread-3 waiting for others to reach barrier.
+pool-4-thread-2 waiting for others to reach barrier.
+pool-4-thread-2: Final result = 2.746599E56129
+Completed in: 0.064 sec.
+Spawning 4 worker threads to compute 3750 numbers partialFactorial out of total: 15000
+pool-5-thread-1 waiting for others to reach barrier.
+pool-5-thread-2 waiting for others to reach barrier.
+pool-5-thread-4 waiting for others to reach barrier.
+pool-5-thread-3 waiting for others to reach barrier.
+pool-5-thread-3: Final result = 2.746599E56129
+Completed in: 0.051 sec.
