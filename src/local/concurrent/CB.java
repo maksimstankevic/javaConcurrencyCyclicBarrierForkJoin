@@ -1,8 +1,11 @@
 package local.concurrent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -74,40 +77,111 @@ class CB {
         }
     }
 
-    class ForkJoinEncode extends RecursiveAction {
+    class ForkJoinEncryptDecrypt extends RecursiveAction {
 
         private int start;
         private int end;
+        private int seed;
+        private String in;
+        private String out;
         private List<Path> files;
 
-        protected void compute() {
-
+        public ForkJoinEncryptDecrypt(int start, int end, List<Path> files, int seed, String in, String out) {
+            this.start = start;
+            this.end = end;
+            this.seed = seed;
+            this.in = in;
+            this.out = out;
+            this.files = files;
         }
 
-
-    }
-
-    class ForkJoinDecode extends RecursiveAction{
-
-
         protected void compute() {
+            if (end - start <= 1) {
+
+                String fileToWrite = (files.get(start)).toString().replace (in, out);
+                StringBuilder accumulator = new StringBuilder();
+
+                System.out.println("Thread name: " + Thread.currentThread().getName() + ((seed > 0) ? " ENCODING " + (files.get(start)).toString(): " DECODING " + (files.get(start)).toString()));
+
+                try (PrintWriter writer = new PrintWriter(fileToWrite)) {
+
+
+                    try {
+                        Files.lines(files.get(start))
+                                .map(s -> {
+                                    for (int i = 0; i < s.length(); i++) {
+
+                                        accumulator.append((char) (s.charAt(i) + seed));
+
+                                    }
+                                    writer.println(accumulator.toString());
+                                    accumulator.setLength(0);
+                                    return null;
+                                })
+                                .forEach(s -> {return;});
+                    } catch (IOException e) {
+                        System.out.println("COULD NOT READ" + files.get(start));
+                    }
+
+                    writer.flush();
+
+                    System.out.println("Thread name: " + Thread.currentThread().getName() + " FINISHED!!!!!!!!");
+
+
+                } catch (FileNotFoundException e) {
+                    System.out.println("ISSUES OPENING WRITER FOR: " + fileToWrite + " !!!!!!!!!!!");
+                }
+            } else {
+
+                int middle = start + ((end - start) / 2);
+                //System.out.println("start:" + start + " middle:" + middle + " end:" + end);
+                invokeAll(new ForkJoinEncryptDecrypt(start, middle, files, seed, in, out), new ForkJoinEncryptDecrypt(middle, end, files, seed, in, out));
+
+            }
 
         }
-
     }
 
-    private void processFile (Path fileIN, Path fileOUT) {
 
-    }
 
-    private void encrypDecryptWithForkJoin (int parallelism, Path data, Path dataOut){
+    private void encryptDecryptWithForkJoin(int parallelism, String in, int seed, String out){
+
+
+        List<Path> files = null;
+        Path data = Paths.get("/mnt/OS/Users/adm/IdeaProjects/javaConcurrencyCyclicBarrierForkJoin/" + in);
+
 
         try {
-            List<Path> files = Files.walk(data, 1)
+            files = Files.walk(data, 1)
+                    .filter(s -> s.toString().contains(".txt"))
                     .collect(Collectors.toCollection(ArrayList::new));
         } catch (IOException e) {
 
         }
+
+
+
+//        if (files == null) return;
+//
+//
+//        files.forEach(System.out::println);
+
+
+        ForkJoinTask<?> task = new ForkJoinEncryptDecrypt(0, files.size(), files, seed, in, out);
+        ForkJoinPool pool = new ForkJoinPool(parallelism);
+        startTime = System.currentTimeMillis();
+        pool.invoke(task);
+        pool.shutdown();
+        boolean result = false;
+        try {
+            result = pool.awaitTermination(10L, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            System.out.println("POOL AWAITTERMINATION INTERRUPTED!!!!!!!!1");
+        }
+        if (result) {
+            double time = (System.currentTimeMillis() - startTime)/1000.0;
+            System.out.println("Completed in: " + time + " sec.");
+        } else System.out.println("10 MINUTES WAS NOT ENOUGH!!!!");
 
 
     }
@@ -182,6 +256,63 @@ class CB {
         System.gc();
         demo5.runSimulation(4, 15000);
         demo5 = null;
+        System.gc();
+
+
+        ////////////////////////////////////////////////////
+
+
+        //ENCODING(positive seed to add to every char in the file)
+
+        CB demo6 = new CB();
+
+        demo6.encryptDecryptWithForkJoin(1, "data", 3, "dataOut");
+
+        demo6 = null;
+        System.gc();
+
+
+        CB demo7 = new CB();
+
+        demo7.encryptDecryptWithForkJoin(2, "data", 3, "dataOut");
+
+        demo7 = null;
+        System.gc();
+
+
+        CB demo8 = new CB();
+
+        demo8.encryptDecryptWithForkJoin(3, "data", 3, "dataOut");
+
+        demo8 = null;
+        System.gc();
+
+
+        CB demo9 = new CB();
+
+        demo9.encryptDecryptWithForkJoin(4, "data", 3, "dataOut");
+
+        demo9 = null;
+        System.gc();
+
+
+        /////////////////////////////////////////////////////
+
+        //DECODING(negative seed to subtract from every char in the file)
+
+        CB demo10 = new CB();
+
+        demo10.encryptDecryptWithForkJoin(1, "dataOut", -3, "dataDecoded");
+
+        demo10 = null;
+        System.gc();
+
+
+        CB demo11 = new CB();
+
+        demo11.encryptDecryptWithForkJoin(4, "dataOut", -3, "dataDecoded");
+
+        demo11 = null;
         System.gc();
 
 
