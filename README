@@ -6,7 +6,7 @@ pool-1-thread-1 waiting for others to reach barrier.
 pool-1-thread-1: Final result = 2.746599E56129
 Completed in: 0.319 sec.
 
-!!!!!! 2 times with one thread to account for butn-in
+!!!!!! 2 times with one thread to account for burn-in
 
 Spawning 1 worker threads to compute 15000 numbers partialFactorial out of total: 15000
 pool-2-thread-1 waiting for others to reach barrier.
