@@ -98,6 +98,11 @@ class CB {
         protected void compute() {
             if (end - start <= 1) {
 
+		if (end - start == 0) {
+			System.out.println("No files to process, quitting.");
+			return;
+		}
+
                 String fileToWrite = (files.get(start)).toString().replace (in, out);
                 StringBuilder accumulator = new StringBuilder();
 
@@ -148,7 +153,11 @@ class CB {
 
 
         List<Path> files = null;
-        Path data = Paths.get("/mnt/OS/Users/adm/IdeaProjects/javaConcurrencyCyclicBarrierForkJoin/" + in);
+	
+	ResourceBundle conf = ResourceBundle.getBundle("CB");
+	String root = conf.getString("dataFolder");
+
+        Path data = Paths.get(root + in);
 
 
         try {
